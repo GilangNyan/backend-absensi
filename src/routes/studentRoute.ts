@@ -8,6 +8,6 @@ studentRoute.get('/students', validateToken, getStudents)
 studentRoute.post('/students', validateToken, createStudent)
 studentRoute.put('/students', validateToken, updateStudent)
 studentRoute.delete('/students', validateToken, deleteStudent)
-// studentRoute.post('/students/batch', validateToken, createBatchStudents)
+studentRoute.post('/students/batch', validateToken, createBatchStudents)
 
 export default studentRoute

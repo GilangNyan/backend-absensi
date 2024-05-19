@@ -6,7 +6,7 @@ import sequelize from "sequelize"
 import Sorting from "../types/sorting";
 
 export const getStudents = async (req: ExtendedRequest, res: Response) => {
-    const {page, perPage, id, search, filter, sort, dir} = req.query
+    const {page, perPage, id, search, sort, dir, grade} = req.query
     try {
         if (id) {
             const result = await getStudentByIdService(id)
@@ -19,7 +19,7 @@ export const getStudents = async (req: ExtendedRequest, res: Response) => {
                 sort: sort ? sort : 'updatedAt',
                 dir: dir ? dir : 'ASC'
             }
-            const results = await getStudentService(limit, offset, filterSearch, filter, sorting)
+            const results = await getStudentService(limit, offset, filterSearch, sorting, grade)
             return successResponse(res, results)
         }
     } catch (error: any) {

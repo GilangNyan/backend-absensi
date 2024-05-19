@@ -11,9 +11,9 @@ interface reqQuery {
     perPage: string
     id: string
     search: string
-    filter: string
     sort: string
     dir: string
+    grade: string
 }
 
 interface ExtendedRequest extends Request {

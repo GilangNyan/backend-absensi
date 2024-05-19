@@ -6,6 +6,7 @@ import * as sequelize from "sequelize";
 import { registerUserService } from "../services/authService";
 import { getMenusByRole } from "../services/menuService";
 import ExtendedRequest from "../types/extendedRequest";
+import { getRecentAcademicYearService } from "../services/academicYearService";
 
 export const register = async (req: Request, res: Response) => {
     const {email, username, password, confirmPassword, role} = req.body
@@ -33,11 +34,13 @@ export const login = async (req: Request, res: Response) => {
         let loginExpireMinutes = loginExpire.dataValues.value + 'm'
         let roleId = res.locals.dataValues.roleId
         let menus = await getMenusByRole(roleId)
+        let academicYear = await getRecentAcademicYearService()
         // res.locals = Object.assign(res.locals, menus)
         let token = jwt.sign(res.locals.dataValues, secretKey, {expiresIn: loginExpireMinutes})
         let accessToken = {
             accessToken: token,
-            menus: menus
+            menus: menus,
+            academicYear: academicYear
         }
         return successResponse(res, accessToken)
     } catch (error) {

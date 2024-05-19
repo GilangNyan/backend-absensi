@@ -5,10 +5,10 @@ import AcademicYear from "../models/academicYearModel"
 import Grade from "../models/gradeModel"
 import StudentGrade from "../models/studentGradeModel"
 import Sorting from "../types/sorting"
+import sequelize from "sequelize"
 
-export const getStudentService = async (limit: number, offset: number, search: string, filter: string, sorting: Sorting) => {
-    const grade = null
-    let isGradeGroupRequired = false
+export const getStudentService = async (limit: number, offset: number, search: string, sorting: Sorting, grade: string) => {
+    let isGradeRequired = false
     const academicYear = null
     let isAcademicYearRequired = false
     let gradeCondition: any = {}
@@ -16,10 +16,12 @@ export const getStudentService = async (limit: number, offset: number, search: s
     if (academicYear) {
         academicYearCondition.id = academicYear
     }
-    if (grade) {
-        gradeCondition.id = grade
-        isGradeGroupRequired = true
-        isAcademicYearRequired = true
+    if (grade != undefined || grade != null) {
+        if (grade != 'no-grade') {
+            gradeCondition.id = grade
+            isGradeRequired = true
+            isAcademicYearRequired = true
+        }
     }
     let studentSort: any[] = []
     let gradeSort: any[] = []
@@ -58,23 +60,23 @@ export const getStudentService = async (limit: number, offset: number, search: s
         order: studentSort,
         include: [
             {
-                model: StudentGrade,
-                include: [
-                    {
-                        model: Grade,
-                        where: gradeCondition,
-                        required: isGradeGroupRequired,
-                        order: gradeSort
-                    },
-                    {
-                        model: AcademicYear,
-                        required: isAcademicYearRequired,
-                        where: academicYearCondition
-                    }
-                ]
+                model: Grade,
+                where: gradeCondition,
+                required: isGradeRequired
+            },
+            {
+                model: AcademicYear,
+                where: academicYearCondition,
+                required: isAcademicYearRequired
             }
         ]
     })
+    if (grade == 'no-grade') {
+        students.rows = students.rows.filter((item: any) => {
+            return item.grades.length === 0
+        })
+        students.count = students.rows.length
+    }
     let response: any = getPagingData(students, offset, limit)
     return response
 }

@@ -1,6 +1,8 @@
 import { Op } from "sequelize"
 import Grade from "../models/gradeModel"
 import { getPagingData } from "../utils/utility"
+import StudentGrade from "../models/studentGradeModel"
+import Student from "../models/studentModel"
 
 export const getGradeService = async (limit: number, offset: number, search: string) => {
     const grades = await Grade.findAndCountAll({
@@ -10,7 +12,13 @@ export const getGradeService = async (limit: number, offset: number, search: str
             name: {
                 [Op.iLike]: `%${search}%`
             }
-        }
+        },
+        include: {
+            model: Student
+        },
+        order: [
+            ['name', 'ASC']
+        ]
     })
     const response: any = getPagingData(grades, offset, limit)
     return response
