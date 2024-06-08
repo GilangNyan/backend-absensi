@@ -73,9 +73,10 @@ export const getMenusByRole = async (roleId: string) => {
                 include: [
                     {
                         model: Submenu,
+                        required: false,
                         where: {
                             isActive: true
-                        }
+                        },
                     }
                 ]
             }
