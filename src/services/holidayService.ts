@@ -33,6 +33,15 @@ export const getHolidayByIdService = async (id: string) => {
     return result
 }
 
+export const getHolidayByDateService = async (date: string) => {
+    const result = await Holiday.findOne({
+        where: {
+            date: date
+        }
+    })
+    return result
+}
+
 export const createHolidayService = async (name: string, date: string, description: string) => {
     const result = await Holiday.create({
         name: name,
