@@ -1,16 +1,23 @@
 import { Response } from "express";
 import ExtendedRequest from "../types/extendedRequest";
 import { errorResponse, successResponse } from "../utils/response";
-import { createBatchStudentsService, createStudentsService, deleteStudentsService, getStudentByIdService, getStudentService, updateStudentsService } from "../services/studentService";
+import { createBatchStudentsService, createStudentsService, deleteStudentsService, getStudentByIdService, getStudentByNisnService, getStudentService, updateStudentsService } from "../services/studentService";
 import sequelize from "sequelize"
 import Sorting from "../types/sorting";
+import { getStudentGradeByStudentIdAndAcademicYearIdService } from "../services/studentGradeService";
+import { getRecentAcademicYearService } from "../services/academicYearService";
 
 export const getStudents = async (req: ExtendedRequest, res: Response) => {
-    const {page, perPage, id, search, sort, dir, grade} = req.query
+    const {page, perPage, id, search, sort, dir, grade, nisn, year} = req.query
     try {
         if (id) {
             const result = await getStudentByIdService(id)
             return successResponse(res, result)
+        } else if (nisn) {
+            const student = await getStudentByNisnService(nisn)
+            const academicYear = await getRecentAcademicYearService()
+            const studentGrade = await getStudentGradeByStudentIdAndAcademicYearIdService(student.dataValues.id, academicYear!.dataValues.id)
+            return successResponse(res, studentGrade)
         } else {
             let offset: number = parseInt(page) || 1
             let limit: number = parseInt(perPage) || 10
@@ -19,7 +26,8 @@ export const getStudents = async (req: ExtendedRequest, res: Response) => {
                 sort: sort ? sort : 'updatedAt',
                 dir: dir ? dir : 'ASC'
             }
-            const results = await getStudentService(limit, offset, filterSearch, sorting, grade)
+            const acadYear = year != undefined ? year : null
+            const results = await getStudentService(limit, offset, filterSearch, sorting, grade, acadYear)
             return successResponse(res, results)
         }
     } catch (error: any) {

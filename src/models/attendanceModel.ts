@@ -21,7 +21,7 @@ Attendance.init(
             defaultValue: DataTypes.UUIDV4
         },
         date: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE,
             allowNull: false
         },
         status: {

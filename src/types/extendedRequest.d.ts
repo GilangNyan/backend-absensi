@@ -14,6 +14,8 @@ interface reqQuery {
     sort: string
     dir: string
     grade: string
+    nisn: string
+    year: string
 }
 
 interface ExtendedRequest extends Request {

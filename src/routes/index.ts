@@ -10,6 +10,7 @@ import holidayRoute from './holidayRoute'
 import studentRoute from './studentRoute'
 import gradeRoute from './gradeRoute'
 import academicYearRoute from './academicYearRoute'
+import attendanceRoute from './attendanceRoute'
 
 export const routes = express.Router()
 
@@ -24,3 +25,4 @@ routes.use(holidayRoute)
 routes.use(studentRoute)
 routes.use(gradeRoute)
 routes.use(academicYearRoute)
+routes.use(attendanceRoute)

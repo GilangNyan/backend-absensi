@@ -1,6 +1,8 @@
 import { Op } from "sequelize"
 import { sequelize } from "../config/database"
 import StudentGrade from "../models/studentGradeModel"
+import Student from "../models/studentModel"
+import Grade from "../models/gradeModel"
 
 export const registerStudentsGradeService = async (data: any[]) => {
     const transaction = await sequelize.transaction()
@@ -41,4 +43,18 @@ export const registerStudentsGradeService = async (data: any[]) => {
         transaction.rollback()
         throw error
     }
+}
+
+export const getStudentGradeByStudentIdAndAcademicYearIdService = async (studentId: string, academicYearId: string) => {
+    const studentGrade = await StudentGrade.findOne({
+        where: {
+            studentId: studentId,
+            academicYearId: academicYearId
+        },
+        include: [Student, Grade]
+    })
+    if (!studentGrade) {
+        throw new Error('Not found')
+    }
+    return studentGrade
 }

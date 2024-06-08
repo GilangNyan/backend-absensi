@@ -7,9 +7,9 @@ import StudentGrade from "../models/studentGradeModel"
 import Sorting from "../types/sorting"
 import sequelize from "sequelize"
 
-export const getStudentService = async (limit: number, offset: number, search: string, sorting: Sorting, grade: string) => {
+export const getStudentService = async (limit: number, offset: number, search: string, sorting: Sorting, grade: string, year: string | null) => {
     let isGradeRequired = false
-    const academicYear = null
+    const academicYear = year
     let isAcademicYearRequired = false
     let gradeCondition: any = {}
     let academicYearCondition: any = {}
@@ -83,6 +83,18 @@ export const getStudentService = async (limit: number, offset: number, search: s
 
 export const getStudentByIdService = async (id: string) => {
     const student = await Student.findByPk(id)
+    if (!student) {
+        throw new Error('Not found')
+    }
+    return student
+}
+
+export const getStudentByNisnService = async (nisn: string) => {
+    const student = await Student.findOne({
+        where: {
+            nisn: nisn
+        }
+    })
     if (!student) {
         throw new Error('Not found')
     }
