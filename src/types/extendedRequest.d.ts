@@ -16,6 +16,7 @@ interface reqQuery {
     grade: string
     nisn: string
     year: string
+    month: string
 }
 
 interface ExtendedRequest extends Request {

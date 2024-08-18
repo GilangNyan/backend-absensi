@@ -1,6 +1,6 @@
 import { Response } from "express";
 import ExtendedRequest from "../types/extendedRequest";
-import { recordAttendanceService } from "../services/attendanceService";
+import { getMonthlyAttendanceByGradeService, recordAttendanceService } from "../services/attendanceService";
 import { errorResponse, successResponse } from "../utils/response";
 import sequelize from "sequelize"
 import { getRecentAcademicYearService } from "../services/academicYearService";
@@ -30,5 +30,15 @@ export const recordAttendance = async (req: ExtendedRequest, res: Response): Pro
         } else {
             return errorResponse(res, error.message, error)
         }
+    }
+}
+
+export const getMonthlyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
+    const { year, month, grade } = req.query
+    try {
+        const result = await getMonthlyAttendanceByGradeService(parseInt(year), parseInt(month), grade)
+        return successResponse(res, result)
+    } catch (error: any) {
+        return errorResponse(res, error.message, error)
     }
 }
