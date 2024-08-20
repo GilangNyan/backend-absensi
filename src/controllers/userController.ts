@@ -2,9 +2,10 @@ import ExtendedRequest from "../types/extendedRequest";
 import * as sequelize from "sequelize";
 import { errorResponse, successResponse } from "../utils/response";
 import { Response } from "express";
-import { createUserService, updatePasswordService } from "../services/userService";
+import { createUserService, getUserById, updatePasswordService } from "../services/userService";
 import { getRoleByNameService } from "../services/roleService";
 import { createEmployeeService } from "../services/employeeService";
+import { checkHash } from "../utils/crypt";
 
 export const createSuperadminUser = async (req: ExtendedRequest, res: Response) => {
     try {
@@ -30,15 +31,23 @@ export const createSuperadminUser = async (req: ExtendedRequest, res: Response) 
 }
 
 export const updatePasswordUser = async (req: ExtendedRequest, res: Response) => {
-    let {id, oldPassword, newPassword, confirmPassword} = req.body
+    let {oldPassword, newPassword} = req.body
     try {
-        let user = await updatePasswordService(id, newPassword)
-        return successResponse(res, user)
+        let token = req.jwt
+        const user = await getUserById(token.id)
+        if (checkHash(user.dataValues.password, oldPassword)) {
+            const result = await updatePasswordService(user.dataValues.id, newPassword)
+            return successResponse(res, result)
+        } else {
+            throw new Error('Old Password doesn\'t match')
+        }
     } catch (error: any) {
         if (error instanceof sequelize.ValidationError) {
             return errorResponse(res, error.message, error.errors, 400)
         } else if (error.message == 'Not found') {
             return errorResponse(res, error.message, error, 404)
+        } else if (error.message == 'Old Password doesn\'t match') {
+            return errorResponse(res, error.message, error, 401)
         } else {
             return errorResponse(res, error.message, error)
         }

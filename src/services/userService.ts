@@ -2,6 +2,14 @@ import User from "../models/userModel"
 import { hash } from "../utils/crypt"
 import { getConfigByKeyService } from "./configService"
 
+export const getUserById = async (id: string) => {
+    const result = await User.findByPk(id)
+    if (!result) {
+        throw new Error('Not found')
+    }
+    return result
+}
+
 export const createUserService = async (username: string, roleId: string, email: string | any = null) => {
     let defaultPassword = await getConfigByKeyService('user-default-password')
     let password: string = hash(defaultPassword.dataValues.value)
