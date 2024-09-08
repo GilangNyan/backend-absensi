@@ -18,6 +18,9 @@ export const checkUserPassword = async (req: Request, res: Response, next: NextF
     if (!user) {
         return errorResponse(res, 'Username Not Found', {}, 404)
     }
+    if (user.status === 'I') {
+        return errorResponse(res, 'User is inactive', {}, 403)
+    }
     if (checkHash(user.password, password)) {
         res.locals = user
         return next()

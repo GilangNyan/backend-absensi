@@ -52,7 +52,7 @@ export const createEmployeeService = async (nip: string, fullname: string, gende
     return employee
 }
 
-export const updateEmployeeService = async (id: string, updatedData: { nip: string, fullname: string, gender: string, birthPlace: string, birthDate: string }) => {
+export const updateEmployeeService = async (id: string, updatedData: { fullname: string, gender: string, birthPlace: string, birthDate: string }) => {
     const employee = await Employee.findByPk(id)
     if (!employee) {
         throw new Error('Not found')
