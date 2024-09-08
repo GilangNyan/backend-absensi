@@ -18,7 +18,16 @@ export const getMenuService = async (limit: number, offset: number, search: stri
                     }
                 }
             ]
-        }
+        },
+        include: [
+            {
+                model: Submenu,
+                required: false,
+                where: {
+                    isActive: true
+                },
+            }
+        ]
     })
     let response: any = getPagingData(result, offset, limit)
     return response
