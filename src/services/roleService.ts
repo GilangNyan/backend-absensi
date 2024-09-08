@@ -1,6 +1,8 @@
 import { Op } from "sequelize"
 import Role from "../models/roleModel"
 import { getPagingData } from "../utils/utility"
+import Menu from "../models/menuModel"
+import Submenu from "../models/submenuModel"
 
 export const getRolesService = async (limit: number, offset: number, search: string) => {
     let roles = await Role.findAndCountAll({
@@ -19,7 +21,14 @@ export const getRolesService = async (limit: number, offset: number, search: str
                     }
                 }
             ]
-        }
+        },
+        include: [
+            {
+                model: Menu,
+                required: false,
+                include: [Submenu]
+            }
+        ]
     })
     let response: any = getPagingData(roles, offset, limit)
     return response
