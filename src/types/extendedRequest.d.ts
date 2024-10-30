@@ -17,6 +17,7 @@ interface reqQuery {
     nisn: string
     year: string
     month: string
+    date: string
 }
 
 interface ExtendedRequest extends Request {

@@ -1,10 +1,11 @@
 import { Response } from "express";
 import ExtendedRequest from "../types/extendedRequest";
-import { getMonthlyAttendanceByGradeService, recordAttendanceService } from "../services/attendanceService";
+import { getDailyAttendanceByGradeService, getMonthlyAttendanceByGradeService, getYearlyAttendanceByGradeService, recordAttendanceService } from "../services/attendanceService";
 import { errorResponse, successResponse } from "../utils/response";
 import sequelize from "sequelize"
 import { getRecentAcademicYearService } from "../services/academicYearService";
 import { getHolidayByDateService } from "../services/holidayService";
+import { downloadXlsx, IDataStructure } from "../services/downloadFileService";
 
 export const recordAttendance = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
     const { studentId, gradeId, academicYearId, date, status } = req.body
@@ -33,11 +34,52 @@ export const recordAttendance = async (req: ExtendedRequest, res: Response): Pro
     }
 }
 
+export const getDailyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
+    const { date, grade } = req.query
+    try {
+        const result = await getDailyAttendanceByGradeService(date, grade)
+        return successResponse(res, result)
+    } catch (error: any) {
+        return errorResponse(res, error.message, error)
+    }
+}
+
 export const getMonthlyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
     const { year, month, grade } = req.query
     try {
-        const result = await getMonthlyAttendanceByGradeService(parseInt(year), parseInt(month), grade)
+        // const result = await getMonthlyAttendanceByGradeService(parseInt(year), parseInt(month), grade)
+        const result = await getMonthlyAttendanceByGradeService(year, parseInt(month), grade)
         return successResponse(res, result)
+    } catch (error: any) {
+        return errorResponse(res, error.message, error)
+    }
+}
+
+export const getYearlyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
+    const { year, grade } = req.query
+    try {
+        const result = await getYearlyAttendanceByGradeService(year, grade)
+        return successResponse(res, result)
+    } catch (error: any) {
+        return errorResponse(res, error.message, error)
+    }
+}
+
+export const downloadDailyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
+    const { date, grade } = req.query
+    try {
+        const result = await getDailyAttendanceByGradeService(date, grade)
+        return downloadXlsx(res, result, 'daily-attendance', 'Daily Attendance Reports')
+    } catch (error: any) {
+        return errorResponse(res, error.message, error)
+    }
+}
+
+export const downloadMonthlyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
+    const { year, month, grade } = req.query
+    try {
+        const result = await getMonthlyAttendanceByGradeService(year, parseInt(month), grade)
+        return downloadXlsx(res, (result as IDataStructure), 'monthly-attendance', 'Monthly Attendance Reports')
     } catch (error: any) {
         return errorResponse(res, error.message, error)
     }
