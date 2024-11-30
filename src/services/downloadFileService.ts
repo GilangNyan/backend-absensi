@@ -143,9 +143,22 @@ export const downloadPdf = async (res: Response, data: IDataStructure | Student[
   })
   await browser.close()
 
+  let filename = type
+  if (type == 'daily-attendance') filename += `_${formatDate(date)}`
+  // else if (type == 'monthly-attendance')
+
   res.setHeader('Content-Type', 'application/pdf')
-  res.setHeader('Content-Disposition', `attachment;filename=${type}.pdf`);
-  res.end(pdfBuffer)
+  // res.setHeader('Content-Disposition', `attachment;filename=${filename}.pdf`);
+  const pdfFilePath = path.join(__dirname, `${filename}.pdf`)
+  fs.writeFileSync(`${__dirname}/${filename}.pdf`, pdfBuffer)
+  res.download(pdfFilePath, `${filename}.pdf`, (err) => {
+    if (err) {
+      console.error('Error saat download file: ', err)
+      throw new Error('Terjadi kesalahan saat download file')
+    } else {
+      fs.unlinkSync(pdfFilePath)
+    }
+  })
 }
 
 const generateDailyAttendanceFile = (data: Student[]): XLSX.WorkSheet => {

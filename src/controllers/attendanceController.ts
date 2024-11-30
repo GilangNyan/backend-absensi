@@ -66,7 +66,7 @@ export const getYearlyAttendanceByGrade = async (req: ExtendedRequest, res: Resp
 }
 
 export const downloadDailyAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
-    const { date, grade, type = 'xlsx' } = req.query
+    const { date, grade, type } = req.query
     try {
         const result = await getDailyAttendanceByGradeService(date, grade)
         if (type == 'xlsx') {
