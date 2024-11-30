@@ -94,7 +94,7 @@ export const createAcademicYearService = async (firstMonth: string) => {
 }
 
 // Private Functions
-const getAcademicYearByDateService = async (startDate: Date, endDate: Date) => {
+export const getAcademicYearByDateService = async (startDate: Date, endDate: Date) => {
     const academicYear = await AcademicYear.findOne({
         where: {
             startDate: startDate,

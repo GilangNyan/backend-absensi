@@ -18,6 +18,7 @@ interface reqQuery {
     year: string
     month: string
     date: string
+    type: string
 }
 
 interface ExtendedRequest extends Request {
