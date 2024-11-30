@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Harian</title>
+  <style>
+    <%- cssBase %>
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <%- include('letterhead', { logo }) %>
+      <section class="heading">
+        <h3>LAPORAN ABSENSI SISWA HARIAN</h3>
+        <div class="info">
+          <div class="left">
+            <table>
+              <tr>
+                <td>Tanggal</td>
+                <td>:</td>
+                <td><%= date %></td>
+              </tr>
+              <tr>
+                <td>Kelas</td>
+                <td>:</td>
+                <td>
+                  <%= grade %>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="right">
+            <table>
+              <tr>
+                <td>Tahun Pelajaran</td>
+                <td>:</td>
+                <td><%= academicYear %></td>
+              </tr>
+              <tr>
+                <td>Wali Kelas</td>
+                <td>:</td>
+                <td></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section class="content">
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2" style="width: 6%;">No.</th>
+              <th rowspan="2" style="width: 45%;">Nama</th>
+              <th rowspan="2" style="width: 13%;">Kelas</th>
+              <th colspan="4" style="width: 36%;">Kehadiran</th>
+            </tr>
+            <tr>
+              <th style="width: 9%;">Hadir</th>
+              <th style="width: 9%;">Sakit</th>
+              <th style="width: 9%;">Izin</th>
+              <th style="width: 9%;">Alpa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const item of data) { %>
+              <tr>
+                <td class="center"><%= item.ord %></td>
+                <td><%= item.name %></td>
+                <td class="center"><%= item.grade %></td>
+                <td class="center"><%= item.hadir %></td>
+                <td class="center"><%= item.izin %></td>
+                <td class="center"><%= item.sakit %></td>
+                <td class="center"><%= item.alpa %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </section>
+      <section class="footing">
+        <span class="bold">Ringkasan:</span>
+        <table>
+          <tr>
+            <td>Jumlah Siswa</td>
+            <td>:</td>
+            <td><%= data.length %></td>
+          </tr>
+          <tr>
+            <td>Hadir</td>
+            <td>:</td>
+            <td><%= summary.hadir %></td>
+          </tr>
+          <tr>
+            <td>Sakit</td>
+            <td>:</td>
+            <td><%= summary.sakit %></td>
+          </tr>
+          <tr>
+            <td>Izin</td>
+            <td>:</td>
+            <td><%= summary.izin %></td>
+          </tr>
+          <tr>
+            <td>Alpa</td>
+            <td>:</td>
+            <td><%= summary.alpa %></td>
+          </tr>
+        </table>
+      </section>
+  </div>
+</body>
+
+</html>
