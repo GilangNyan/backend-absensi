@@ -1,3 +1,5 @@
+import { DateTime } from "luxon"
+
 export const getPagingData = (data: any, page: number, limit: number) => {
     const rows: any = data.rows
     const totalItems: number = data.count
@@ -37,4 +39,10 @@ export const getTotalDaysByMonth = (year: number, month: number): number => {
     const dayDiff = timeDiff / (1000 * 3600 * 24)
 
     return dayDiff + 1
+}
+
+export const formatDate = (date: string): string => {
+    const dt = DateTime
+    const formattedDate = dt.fromISO(date).setLocale('id-ID').toFormat('DDDD')
+    return formattedDate
 }
