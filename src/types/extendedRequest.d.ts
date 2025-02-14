@@ -19,6 +19,7 @@ interface reqQuery {
     month: string
     date: string
     type: string
+    semester: string
 }
 
 interface ExtendedRequest extends Request {
