@@ -5,7 +5,7 @@ import { errorResponse, successResponse } from "../utils/response";
 import sequelize from "sequelize"
 import { getRecentAcademicYearService } from "../services/academicYearService";
 import { getHolidayByDateService } from "../services/holidayService";
-import { downloadPdf, downloadXlsx, IDataStructure } from "../services/downloadFileService";
+import { downloadPdf, downloadXlsx, IDataStructure, ISemDataStructure } from "../services/downloadFileService";
 
 export const recordAttendance = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
     const { studentId, gradeId, academicYearId, date, status } = req.body
@@ -94,6 +94,16 @@ export const downloadMonthlyAttendanceByGrade = async (req: ExtendedRequest, res
     try {
         const result = await getMonthlyAttendanceByGradeService(year, parseInt(month), grade)
         return downloadXlsx(res, (result as IDataStructure), 'monthly-attendance', 'Monthly Attendance Reports')
+    } catch (error: any) {
+        return errorResponse(res, error.message, error)
+    }
+}
+
+export const downloadSemesterAttendanceByGrade = async (req: ExtendedRequest, res: Response): Promise<unknown> => {
+    const { year, semester, grade } = req.query
+    try {
+        const result = await getSemesterAttendanceByGradeService(year, parseInt(semester), grade)
+        return downloadXlsx(res, (result as ISemDataStructure), 'semester-attendance', 'Semester Attendance Reports')
     } catch (error: any) {
         return errorResponse(res, error.message, error)
     }

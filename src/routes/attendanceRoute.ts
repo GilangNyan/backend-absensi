@@ -1,5 +1,5 @@
 import express from 'express'
-import { downloadDailyAttendanceByGrade, downloadMonthlyAttendanceByGrade, getDailyAttendanceByGrade, getMonthlyAttendanceByGrade, getSemesterAttendanceByGrade, getYearlyAttendanceByGrade, recordAttendance } from '../controllers/attendanceController'
+import { downloadDailyAttendanceByGrade, downloadMonthlyAttendanceByGrade, downloadSemesterAttendanceByGrade, getDailyAttendanceByGrade, getMonthlyAttendanceByGrade, getSemesterAttendanceByGrade, getYearlyAttendanceByGrade, recordAttendance } from '../controllers/attendanceController'
 import { validateToken } from '../middlewares/authenticateUser'
 
 const attendanceRoute = express.Router()
@@ -11,5 +11,6 @@ attendanceRoute.get('/attendance/semester', validateToken, getSemesterAttendance
 attendanceRoute.get('/attendance/yearly', validateToken, getYearlyAttendanceByGrade)
 attendanceRoute.get('/attendance/daily/download', validateToken, downloadDailyAttendanceByGrade)
 attendanceRoute.get('/attendance/monthly/download', validateToken, downloadMonthlyAttendanceByGrade)
+attendanceRoute.get('/attendance/semester/download', validateToken, downloadSemesterAttendanceByGrade)
 
 export default attendanceRoute

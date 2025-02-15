@@ -46,3 +46,14 @@ export const formatDate = (date: string): string => {
     const formattedDate = dt.fromISO(date).setLocale('id-ID').toFormat('DDDD')
     return formattedDate
 }
+
+export const getTotalDaysByDateRange = (start: Date, end: Date): number => {
+    const startDate = new Date(start)
+    const endDate = new Date(end)
+    
+    const timeDiff = endDate.getTime() - startDate.getTime()
+  
+    const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24))
+  
+    return dayDiff
+}
