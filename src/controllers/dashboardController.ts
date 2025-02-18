@@ -7,7 +7,6 @@ export const getDashboardSummary = async (req: ExtendedRequest, res: Response) =
   const  { year } = req.query
   try {
     const result = await getDashboardSummaryService(year)
-    console.log(result)
     return successResponse(res, result)
   } catch (error: any) {
     return errorResponse(res, error.message, error)
