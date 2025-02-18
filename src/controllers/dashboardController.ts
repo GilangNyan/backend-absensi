@@ -9,6 +9,10 @@ export const getDashboardSummary = async (req: ExtendedRequest, res: Response) =
     const result = await getDashboardSummaryService(year)
     return successResponse(res, result)
   } catch (error: any) {
-    return errorResponse(res, error.message, error)
+    if (error.message == 'Not found') {
+      return errorResponse(res, error.message, error, 404)
+    } else {
+        return errorResponse(res, error.message, error)
+    }
   }
 }
