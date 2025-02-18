@@ -11,6 +11,7 @@ import studentRoute from './studentRoute'
 import gradeRoute from './gradeRoute'
 import academicYearRoute from './academicYearRoute'
 import attendanceRoute from './attendanceRoute'
+import dashboardRoute from './dashboardRoute'
 
 export const routes = express.Router()
 
@@ -26,3 +27,4 @@ routes.use(studentRoute)
 routes.use(gradeRoute)
 routes.use(academicYearRoute)
 routes.use(attendanceRoute)
+routes.use(dashboardRoute)
