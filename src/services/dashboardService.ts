@@ -41,7 +41,8 @@ const getTodayAttendedStudent = async (academicYear: string) => {
       date: {
         [Op.between]: [startRange, endRange]
       },
-      academicYearId: academicYear
+      academicYearId: academicYear,
+      status: 'H'
     }
   })
 
@@ -59,7 +60,8 @@ const getTodayLateStudent = async (academicYear: string) => {
       date: {
         [Op.between]: [startRange, endRange]
       },
-      academicYearId: academicYear
+      academicYearId: academicYear,
+      status: 'H'
     }
   })
 
