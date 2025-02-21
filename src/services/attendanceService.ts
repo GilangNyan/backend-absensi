@@ -10,14 +10,37 @@ import AcademicYear from "../models/academicYearModel"
 import { getConfigByKeyService } from "./configService"
 
 export const recordAttendanceService = async (studentId: string, gradeId: string, academicYearId: string, date: string, status: string) => {
-    const attendance = await Attendance.create({
-        studentId: studentId,
-        gradeId: gradeId,
-        academicYearId: academicYearId,
-        date: date,
-        status: status,
+    const startDate = getStartEndDate(date)
+    const endDate = getStartEndDate(date, true)
+    const find = await Attendance.findOne({
+        where: {
+            studentId: studentId,
+            gradeId: gradeId,
+            academicYearId: academicYearId,
+            date: {
+                [Op.between]: [startDate, endDate]
+            }
+        }
     })
-    return attendance
+    if (find) {
+        const attendance = await find.update({
+            studentId: studentId,
+            gradeId: gradeId,
+            academicYearId: academicYearId,
+            date: date,
+            status: status,
+        })
+        return attendance
+    } else {
+        const attendance = await Attendance.create({
+            studentId: studentId,
+            gradeId: gradeId,
+            academicYearId: academicYearId,
+            date: date,
+            status: status,
+        })
+        return attendance
+    }
 }
 
 export const getDailyAttendanceByGradeService = async (date: string, grade: string) => {
